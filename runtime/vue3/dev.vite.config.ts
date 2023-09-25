@@ -42,7 +42,7 @@ export default defineConfig({
 
   root: './',
 
-  base: '/tmagic-editor/playground/runtime/vue3/',
+  base: './',
 
   publicDir: 'public',
 
