@@ -44,7 +44,7 @@
 <script lang="ts" setup>
 import { computed, nextTick, ref, toRaw } from 'vue';
 import { useRouter } from 'vue-router';
-import { Coin, Connection, Document } from '@element-plus/icons-vue';
+import { Coin, Connection, Document, Picture } from '@element-plus/icons-vue';
 import serialize from 'serialize-javascript';
 
 import { TMagicDialog, tMagicMessage, tMagicMessageBox } from '@tmagic/design';
@@ -93,17 +93,17 @@ const menu: MenuBarData = {
   ],
   center: ['delete', 'undo', 'redo', 'guides', 'rule', 'zoom'],
   right: [
-    {
-      type: 'button',
-      text: 'Form Playground',
-      handler: () => router.push('form'),
-    },
-    {
-      type: 'button',
-      text: 'Table Playground',
-      handler: () => router.push('table'),
-    },
-    '/',
+    // {
+    //   type: 'button',
+    //   text: 'Form Playground',
+    //   handler: () => router.push('form'),
+    // },
+    // {
+    //   type: 'button',
+    //   text: 'Table Playground',
+    //   handler: () => router.push('table'),
+    // },
+    // '/',
     {
       type: 'button',
       text: '预览',
@@ -142,13 +142,22 @@ const menu: MenuBarData = {
         tMagicMessage.success('保存成功');
       },
     },
-    '/',
+    // '/',
+    // {
+    //   type: 'button',
+    //   icon: Document,
+    //   tooltip: '源码',
+    //   handler: (service) => service?.uiService.set('showSrc', !service?.uiService.get('showSrc')),
+    // },
     {
       type: 'button',
-      icon: Document,
-      tooltip: '源码',
-      handler: (service) => service?.uiService.set('showSrc', !service?.uiService.get('showSrc')),
-    },
+      text: "导出图片",
+      icon: Picture,
+      tooltip: '导出图片',
+      handler: () => {
+        tMagicMessage.warning('敬请期待');
+      }
+    }
   ],
 };
 

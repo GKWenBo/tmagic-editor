@@ -23,6 +23,8 @@ import Overlay from './overlay';
 import Page from './page';
 import Qrcode from './qrcode';
 import Text from './text';
+import TestText from "./testtext";
+import LuckyDraw from './luckydraw';
 
 const ui: Record<string, any> = {
   page: Page,
@@ -32,6 +34,8 @@ const ui: Record<string, any> = {
   img: Img,
   qrcode: Qrcode,
   overlay: Overlay,
+  testtext: TestText,
+  luckydraw: LuckyDraw
 };
 
 export default ui;

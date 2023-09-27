@@ -41,7 +41,7 @@ export default defineConfig({
     }),
   ],
 
-  base: '/tmagic-editor/playground/',
+  base: './',
 
   resolve: {
     alias: [

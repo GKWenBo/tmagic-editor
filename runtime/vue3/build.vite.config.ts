@@ -68,7 +68,7 @@ export default defineConfig(({ mode }) => {
 
       publicDir: '../public',
 
-      base: `/tmagic-editor/playground/runtime/vue3/${mode}`,
+      base: `./`,
 
       build: {
         emptyOutDir: true,

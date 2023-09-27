@@ -2,7 +2,7 @@ import { FolderOpened, Grid, PictureFilled, SwitchButton, Tickets } from '@eleme
 
 export default [
   {
-    title: '示例容器',
+    title: '容器',
     items: [
       {
         icon: FolderOpened,
@@ -17,7 +17,7 @@ export default [
     ],
   },
   {
-    title: '示例组件',
+    title: '基础组件',
     items: [
       {
         icon: Tickets,
@@ -39,6 +39,16 @@ export default [
         text: '二维码',
         type: 'qrcode',
       },
+      {
+        icon: Tickets,
+        text: '测试文本',
+        type: 'testtext'
+      },
+      {
+        icon: PictureFilled,
+        text: '抽奖背景',
+        type: 'luckydraw'
+      }
     ],
   },
   {

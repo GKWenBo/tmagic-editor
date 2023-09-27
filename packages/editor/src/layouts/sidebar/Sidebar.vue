@@ -82,7 +82,8 @@ import MIcon from '@editor/components/Icon.vue';
 import type { MenuButton, MenuComponent, SideComponent, SideItem } from '@editor/type';
 import { SideBarData } from '@editor/type';
 
-import CodeBlockListPanel from './code-block/CodeBlockListPanel.vue';
+// 暂时注释代码编辑
+// import CodeBlockListPanel from './code-block/CodeBlockListPanel.vue';
 import DataSourceListPanel from './data-source/DataSourceListPanel.vue';
 import ComponentListPanel from './ComponentListPanel.vue';
 import LayerPanel from './LayerPanel.vue';
@@ -97,7 +98,14 @@ const props = withDefaults(
     layerContentMenu: (MenuButton | MenuComponent)[];
   }>(),
   {
-    data: () => ({ type: 'tabs', status: '组件', items: ['component-list', 'layer', 'code-block', 'data-source'] }),
+    data: () => ({ 
+      type: 'tabs', 
+      status: '组件', 
+      items: [
+        'component-list', 
+        'layer', 
+        // 'code-block', 
+        'data-source'] }),
   },
 );
 
@@ -124,14 +132,15 @@ const getItemConfig = (data: SideItem): SideComponent => {
       component: LayerPanel,
       slots: {},
     },
-    'code-block': {
-      $key: 'code-block',
-      type: 'component',
-      icon: EditPen,
-      text: '代码编辑',
-      component: CodeBlockListPanel,
-      slots: {},
-    },
+    // 暂时注释代码编辑
+    // 'code-block': {
+    //   $key: 'code-block',
+    //   type: 'component',
+    //   icon: EditPen,
+    //   text: '代码编辑',
+    //   component: CodeBlockListPanel,
+    //   slots: {},
+    // },
     'data-source': {
       $key: 'data-source',
       type: 'component',
