@@ -42,22 +42,29 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, toRaw } from 'vue';
-import { useRouter } from 'vue-router';
-import { Coin, Connection, Document, Picture } from '@element-plus/icons-vue';
-import serialize from 'serialize-javascript';
+import { computed, nextTick, ref, toRaw } from "vue";
+import { useRouter } from "vue-router";
+import { Coin, Connection, Document, Picture } from "@element-plus/icons-vue";
+import serialize from "serialize-javascript";
 
-import { TMagicDialog, tMagicMessage, tMagicMessageBox } from '@tmagic/design';
-import { DatasourceTypeOption, editorService, MenuBarData, MoveableOptions, TMagicEditor } from '@tmagic/editor';
-import type { MContainer, MNode } from '@tmagic/schema';
-import { NodeType } from '@tmagic/schema';
-import { CustomizeMoveableOptionsCallbackConfig } from '@tmagic/stage';
-import { asyncLoadJs } from '@tmagic/utils';
+import { TMagicDialog, tMagicMessage, tMagicMessageBox } from "@tmagic/design";
+import {
+  DatasourceTypeOption,
+  editorService,
+  MenuBarData,
+  MoveableOptions,
+  TMagicEditor,
+} from "@tmagic/editor";
+import type { MContainer, MNode } from "@tmagic/schema";
+import { NodeType } from "@tmagic/schema";
+import { CustomizeMoveableOptionsCallbackConfig } from "@tmagic/stage";
+import { asyncLoadJs } from "@tmagic/utils";
 
-import DeviceGroup from '../components/DeviceGroup.vue';
-import componentGroupList from '../configs/componentGroupList';
-import dsl from '../configs/dsl';
-import { uaMap } from '../const';
+import DeviceGroup from "../components/DeviceGroup.vue";
+import componentGroupList from "../configs/componentGroupList";
+import dsl from "../configs/dsl";
+import { uaMap } from "../const";
+import html2canvas from "html2canvas";
 
 const { VITE_RUNTIME_PATH, VITE_ENTRY_PATH } = import.meta.env;
 
@@ -81,17 +88,20 @@ const stageRect = ref({
 });
 
 const previewUrl = computed(
-  () => `${VITE_RUNTIME_PATH}/page/index.html?localPreview=1&page=${editor.value?.editorService.get('page')?.id}`,
+  () =>
+    `${VITE_RUNTIME_PATH}/page/index.html?localPreview=1&page=${
+      editor.value?.editorService.get("page")?.id
+    }`
 );
 
 const menu: MenuBarData = {
   left: [
     {
-      type: 'text',
-      text: '魔方',
+      type: "text",
+      text: "魔方",
     },
   ],
-  center: ['delete', 'undo', 'redo', 'guides', 'rule', 'zoom'],
+  center: ["delete", "undo", "redo", "guides", "rule", "zoom"],
   right: [
     // {
     //   type: 'button',
@@ -105,19 +115,19 @@ const menu: MenuBarData = {
     // },
     // '/',
     {
-      type: 'button',
-      text: '预览',
+      type: "button",
+      text: "预览",
       icon: Connection,
       handler: async (services) => {
-        if (services?.editorService.get('modifiedNodeIds').size > 0) {
+        if (services?.editorService.get("modifiedNodeIds").size > 0) {
           try {
-            await tMagicMessageBox.confirm('有修改未保存，是否先保存再预览', '提示', {
-              confirmButtonText: '保存并预览',
-              cancelButtonText: '预览',
-              type: 'warning',
+            await tMagicMessageBox.confirm("有修改未保存，是否先保存再预览", "提示", {
+              confirmButtonText: "保存并预览",
+              cancelButtonText: "预览",
+              type: "warning",
             });
             save();
-            tMagicMessage.success('保存成功');
+            tMagicMessage.success("保存成功");
           } catch (e) {
             console.error(e);
           }
@@ -127,19 +137,19 @@ const menu: MenuBarData = {
         await nextTick();
 
         if (!iframe.value?.contentWindow || !deviceGroup.value?.viewerDevice) return;
-        Object.defineProperty(iframe.value.contentWindow.navigator, 'userAgent', {
+        Object.defineProperty(iframe.value.contentWindow.navigator, "userAgent", {
           value: uaMap[deviceGroup.value.viewerDevice],
           writable: true,
         });
       },
     },
     {
-      type: 'button',
-      text: '保存',
+      type: "button",
+      text: "保存",
       icon: Coin,
       handler: () => {
         save();
-        tMagicMessage.success('保存成功');
+        tMagicMessage.success("保存成功");
       },
     },
     // '/',
@@ -150,14 +160,14 @@ const menu: MenuBarData = {
     //   handler: (service) => service?.uiService.set('showSrc', !service?.uiService.get('showSrc')),
     // },
     {
-      type: 'button',
+      type: "button",
       text: "导出图片",
       icon: Picture,
-      tooltip: '导出图片',
+      tooltip: "导出图片",
       handler: () => {
-        tMagicMessage.warning('敬请期待');
-      }
-    }
+        exportRuntimeImage();
+      },
+    },
   ],
 };
 
@@ -166,7 +176,7 @@ const moveableOptions = (config?: CustomizeMoveableOptionsCallbackConfig): Movea
 
   if (!editor.value) return options;
 
-  const page = editor.value.editorService.get('page');
+  const page = editor.value.editorService.get("page");
 
   const ids = config?.targetElIds || [];
   let isPage = page && ids.includes(`${page.id}`);
@@ -188,13 +198,43 @@ const moveableOptions = (config?: CustomizeMoveableOptionsCallbackConfig): Movea
 
 const save = () => {
   localStorage.setItem(
-    'magicDSL',
+    "magicDSL",
     serialize(toRaw(value.value), {
       space: 2,
       unsafe: true,
-    }).replace(/"(\w+)":\s/g, '$1: '),
+    }).replace(/"(\w+)":\s/g, "$1: ")
   );
   editor.value?.editorService.resetModifiedNodeId();
+};
+
+// 导出预览图片
+const exportRuntimeImage = () => {
+  const runtimeIframe = document.querySelector(`iframe[src="${runtimeUrl}"]`) as any;
+  if (!runtimeIframe) {
+    return;
+  }
+  const iframeDocument = runtimeIframe.iframeDocument || runtimeIframe.contentWindow.document;
+  const appContainer = iframeDocument.getElementById("app");
+  if (!appContainer) {
+    return;
+  }
+
+  const options = {
+    useCORS: true,
+    logging: true,
+    allowTaint: true
+  }
+
+  html2canvas(appContainer, options).then((canvas) => {
+    //将对应dom组件转成图片并生成图片地址
+    let imgUrl = canvas.toDataURL();
+    // 动态生成下载图片链接
+    let a = document.createElement("a");
+    a.href = imgUrl;
+    // 利用浏览器下载器下载图片
+    a.setAttribute("download", "preview.png");
+    a.click();
+  });
 };
 
 asyncLoadJs(`${VITE_ENTRY_PATH}/config/index.umd.cjs`).then(() => {
@@ -217,14 +257,14 @@ save();
 
 editorService.usePlugin({
   beforeDoAdd: (config: MNode, parent?: MContainer | null) => {
-    if (config.type === 'overlay') {
+    if (config.type === "overlay") {
       config.style = {
         ...config.style,
         left: 0,
         top: 0,
       };
 
-      return [config, editorService.get('page')];
+      return [config, editorService.get("page")];
     }
 
     return [config, parent];
