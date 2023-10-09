@@ -152,13 +152,6 @@ const menu: MenuBarData = {
         tMagicMessage.success("保存成功");
       },
     },
-    // '/',
-    // {
-    //   type: 'button',
-    //   icon: Document,
-    //   tooltip: '源码',
-    //   handler: (service) => service?.uiService.set('showSrc', !service?.uiService.get('showSrc')),
-    // },
     {
       type: "button",
       text: "导出图片",
@@ -167,6 +160,13 @@ const menu: MenuBarData = {
       handler: () => {
         exportRuntimeImage();
       },
+    },
+    '/',
+    {
+      type: 'button',
+      icon: Document,
+      tooltip: '源码',
+      handler: (service) => service?.uiService.set('showSrc', !service?.uiService.get('showSrc')),
     },
   ],
 };

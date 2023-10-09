@@ -1,6 +1,6 @@
-import TestText from "./src/index.vue"
+import Tqtswitch from './src/index.vue';
 
 export { default as config } from './src/formConfig';
 export { default as value } from './src/initValue';
 
-export default TestText
+export default Tqtswitch;

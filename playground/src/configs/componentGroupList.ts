@@ -1,4 +1,4 @@
-import { FolderOpened, Grid, PictureFilled, SwitchButton, Tickets } from '@element-plus/icons-vue';
+import { BottomRight, FolderOpened, Grid, PictureFilled, PictureRounded, Switch, SwitchButton, Tickets } from '@element-plus/icons-vue';
 
 export default [
   {
@@ -40,14 +40,19 @@ export default [
         type: 'qrcode',
       },
       {
-        icon: Tickets,
-        text: '测试文本',
-        type: 'testtext'
-      },
-      {
-        icon: PictureFilled,
+        icon: PictureRounded,
         text: '抽奖背景',
         type: 'luckydraw'
+      },
+      {
+        icon: Switch,
+        text: '开关',
+        type: 'tqtswitch'
+      },
+      {
+        icon: BottomRight,
+        text: '分割线',
+        type: 'tqtdivider'
       }
     ],
   },

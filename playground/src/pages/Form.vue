@@ -33,7 +33,6 @@ import { Coin } from '@element-plus/icons-vue';
 import { TMagicDialog, tMagicMessage } from '@tmagic/design';
 import { MenuButton } from '@tmagic/editor';
 import { MForm } from '@tmagic/form';
-
 import NavMenu from '../components/NavMenu.vue';
 
 const router = useRouter();

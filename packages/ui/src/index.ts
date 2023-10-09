@@ -23,8 +23,9 @@ import Overlay from './overlay';
 import Page from './page';
 import Qrcode from './qrcode';
 import Text from './text';
-import TestText from "./testtext";
 import LuckyDraw from './luckydraw';
+import Tqtswitch from './tqtswitch';
+import Tqtdivider from './tqtdivider';
 
 const ui: Record<string, any> = {
   page: Page,
@@ -34,8 +35,9 @@ const ui: Record<string, any> = {
   img: Img,
   qrcode: Qrcode,
   overlay: Overlay,
-  testtext: TestText,
-  luckydraw: LuckyDraw
+  luckydraw: LuckyDraw,
+  tqtswitch: Tqtswitch,
+  tqtdivider: Tqtdivider
 };
 
 export default ui;
