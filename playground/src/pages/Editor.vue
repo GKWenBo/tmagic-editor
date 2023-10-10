@@ -42,10 +42,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, toRaw } from "vue";
+import { computed, nextTick, ref } from 'vue';
 import { useRouter } from "vue-router";
 import { Coin, Connection, Document, Picture } from "@element-plus/icons-vue";
-import serialize from "serialize-javascript";
 
 import { TMagicDialog, tMagicMessage, tMagicMessageBox } from "@tmagic/design";
 import {
@@ -65,6 +64,7 @@ import componentGroupList from "../configs/componentGroupList";
 import dsl from "../configs/dsl";
 import { uaMap } from "../const";
 import html2canvas from "html2canvas";
+import { storage, MAGIC_DSL_KEY } from "../utils";
 
 const { VITE_RUNTIME_PATH, VITE_ENTRY_PATH } = import.meta.env;
 
@@ -75,8 +75,8 @@ const editor = ref<InstanceType<typeof TMagicEditor>>();
 const deviceGroup = ref<InstanceType<typeof DeviceGroup>>();
 const iframe = ref<HTMLIFrameElement>();
 const previewVisible = ref(false);
-const value = ref(dsl);
-const defaultSelected = ref(dsl.items[0].id);
+const value = ref();
+const defaultSelected = ref();
 const propsValues = ref<Record<string, any>>({});
 const propsConfigs = ref<Record<string, any>>({});
 const eventMethodList = ref<Record<string, any>>({});
@@ -87,13 +87,26 @@ const stageRect = ref({
   height: 817,
 });
 
+// 读取DSL
+storage.getItem(MAGIC_DSL_KEY).then(function(v: any) {
+    if (v) {
+      value.value = JSON.parse(v)
+      defaultSelected.value = value.value.items[0].id
+    } else {
+      value.value = dsl
+      defaultSelected.value = dsl.items[0].id
+    }
+  }).catch(function(err) {
+    value.value = dsl
+    defaultSelected.value = dsl.items[0].id
+  })
+
 const previewUrl = computed(
   () =>
     `${VITE_RUNTIME_PATH}/page/index.html?localPreview=1&page=${
       editor.value?.editorService.get("page")?.id
     }`
 );
-
 const menu: MenuBarData = {
   left: [
     {
@@ -161,12 +174,12 @@ const menu: MenuBarData = {
         exportRuntimeImage();
       },
     },
-    '/',
+    "/",
     {
-      type: 'button',
+      type: "button",
       icon: Document,
-      tooltip: '源码',
-      handler: (service) => service?.uiService.set('showSrc', !service?.uiService.get('showSrc')),
+      tooltip: "源码",
+      handler: (service) => service?.uiService.set("showSrc", !service?.uiService.get("showSrc")),
     },
   ],
 };
@@ -196,14 +209,12 @@ const moveableOptions = (config?: CustomizeMoveableOptionsCallbackConfig): Movea
   return options;
 };
 
+// 保存DSL 
 const save = () => {
-  localStorage.setItem(
-    "magicDSL",
-    serialize(toRaw(value.value), {
-      space: 2,
-      unsafe: true,
-    }).replace(/"(\w+)":\s/g, "$1: ")
-  );
+  if (!value.value) {
+    return
+  }
+  storage.setItem(MAGIC_DSL_KEY, JSON.stringify(value.value));
   editor.value?.editorService.resetModifiedNodeId();
 };
 
@@ -222,8 +233,8 @@ const exportRuntimeImage = () => {
   const options = {
     useCORS: true,
     logging: true,
-    allowTaint: true
-  }
+    allowTaint: true,
+  };
 
   html2canvas(appContainer, options).then((canvas) => {
     //将对应dom组件转成图片并生成图片地址
