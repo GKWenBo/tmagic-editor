@@ -94,6 +94,7 @@ export const useStage = (stageOptions: StageOptions) => {
       e.type === GuidesType.HORIZONTAL ? H_GUIDE_LINE_STORAGE_KEY : V_GUIDE_LINE_STORAGE_KEY,
     );
     if (e.guides.length) {
+      
       globalThis.localStorage.setItem(storageKey, JSON.stringify(e.guides));
     } else {
       globalThis.localStorage.removeItem(storageKey);
